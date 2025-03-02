@@ -2,18 +2,11 @@ streamlit
 requests
 folium
 openai
-<<<<<<< HEAD
 pandas
 numpy
-=======
->>>>>>> 56a4527a0138e207c377af7b21e6a50c1c012ca0
 geopandas
 streamlit_folium
 shapely
 scipy
 numpy
-<<<<<<< HEAD
 python-dotenv
-=======
-python-dotenv
->>>>>>> 56a4527a0138e207c377af7b21e6a50c1c012ca0
