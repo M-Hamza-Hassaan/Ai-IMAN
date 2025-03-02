@@ -33,7 +33,7 @@ We developed an **AI-powered geospatial mesh network** that enables students and
 ## Getting Started
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/geospatial-mesh-network.git
+   git clone https://github.com/M-Hamza-Hassaan/Connect-Ai-Innovators.git
    ```
 2. Install dependencies:
    ```sh
