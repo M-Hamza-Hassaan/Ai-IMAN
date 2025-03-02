@@ -14,7 +14,10 @@ import os
 
 # Load environment variables
 load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+# Initialize OpenAI client
+client = openai.OpenAI(api_key=openai_api_key)
 
 # Load Giga Geospatial Dataset (school_geolocation.csv)
 SCHOOL_DATA_FILE = "school_geolocation.csv"
@@ -44,17 +47,17 @@ school_coords = giga_data[["latitude", "longitude"]].values
 school_names = giga_data["school_name"].tolist()
 school_tree = KDTree(school_coords)
 
-# AI-Powered Query Processing
+# AI-Powered Query Processing (Updated for OpenAI >=1.0.0)
 def process_query(query, location):
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": f"You are an AI expert in geospatial networks assisting schools in {location}."},
                 {"role": "user", "content": query}
             ]
         )
-        return response["choices"][0]["message"]["content"]
+        return response.choices[0].message.content
     except Exception as e:
         return f"AI Processing Failed: {e}"
 
@@ -78,6 +81,7 @@ def draw_network():
 
 # Streamlit UI
 st.title("AI-Powered Geospatial Mesh Network 🌍")
+st.title("Connnect With World without Internet")
 st.write("This project simulates **AI-powered query routing** in a **real-world geospatial network** using Giga data.")
 
 query = st.text_area("Enter your question:")
