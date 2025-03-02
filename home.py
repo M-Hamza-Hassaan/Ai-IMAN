@@ -1,11 +1,11 @@
 import streamlit as st
 import random
 import requests
-import folium
+# import folium
 import openai
 import pandas as pd
 import geopandas as gpd
-from streamlit_folium import folium_static
+# from streamlit_folium import folium_static
 from shapely.geometry import Point
 from scipy.spatial import KDTree
 import numpy as np
