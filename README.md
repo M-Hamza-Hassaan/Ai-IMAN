@@ -6,6 +6,10 @@ Students, especially in remote areas, struggle to access relevant educational re
 ## Our Solution
 We developed an **Intelligent mesh ai network** that enables students and educators to interact with an intelligent system capable of routing queries efficiently. By leveraging geospatial datasets and AI, we can process user queries and dynamically route them to the nearest educational institution, providing real-time responses and visualization.
 
+---
+**[This is our presentation](https://storage.googleapis.com/lablab-static-eu/presentations/submissions/cm7rbv0l600003b7avhr6cazk/cm7rbv0l600003b7avhr6cazk-1740907273657_k4lc9i0z8h.pdf)**
+---
+
 ## Technologies Used
 - **Streamlit**: For the web-based interactive UI
 - **Folium**: For geospatial visualization
