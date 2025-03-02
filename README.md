@@ -1,10 +1,10 @@
-# AI-Powered Geospatial Mesh Network 🌍
+# Intelligent Geospatial Mesh Network 🌍
 
 ## Problem Statement
 Students, especially in remote areas, struggle to access relevant educational resources due to poor infrastructure and limited connectivity. Many educational institutions lack efficient ways to route queries and provide real-time information based on geospatial data.
 
 ## Our Solution
-We developed an **AI-powered geospatial mesh network** that enables students and educators to interact with an intelligent system capable of routing queries efficiently. By leveraging geospatial datasets and AI, we can process user queries and dynamically route them to the nearest educational institution, providing real-time responses and visualization.
+We developed an **Intelligent geospatial mesh network** that enables students and educators to interact with an intelligent system capable of routing queries efficiently. By leveraging geospatial datasets and AI, we can process user queries and dynamically route them to the nearest educational institution, providing real-time responses and visualization.
 
 ## Technologies Used
 - **Streamlit**: For the web-based interactive UI
