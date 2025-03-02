@@ -1,84 +1,97 @@
 import streamlit as st
 import random
+import requests
 import folium
 import openai
 import geopandas as gpd
 from streamlit_folium import folium_static
+from shapely.geometry import Point
+from scipy.spatial import KDTree
+import numpy as np
+import os
 
-# OpenAI API Key (Replace with your actual API key)
-openai.api_key = "your-openai-api-key"
 
-# Load Giga Geospatial Dataset (Replace with actual dataset path or URL)
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+
+# Load Giga Geospatial Dataset from GitHub
+GIGA_DATA_URL = ""
+
+response = requests.get(GIGA_DATA_URL)
+if response.status_code == 200:
+    print("URL is accessible, downloading...")
+    gdf = gpd.read_file(GIGA_DATA_URL)
+else:
+        print(f"Failed to access URL. HTTP Status Code: {response.status_code}")
+
+
 @st.cache_data
 def load_geospatial_data():
-    # Example: Load a GeoJSON or shapefile with network nodes
-    gdf = gpd.read_file("path/to/giga_dataset.geojson")
+
+
+    gdf = gpd.read_file(GIGA_DATA_URL)
     return gdf
 
 giga_data = load_geospatial_data()
 
-# Extract node names and coordinates from dataset
+# Extract node names and coordinates
 nodes = giga_data["name"].tolist()
-node_locations = {row["name"]: [row["latitude"], row["longitude"]] for _, row in giga_data.iterrows()}
+node_locations = {row["name"]: [row.geometry.y, row.geometry.x] for _, row in giga_data.iterrows()}
 
-# Simulated connections (or replace with real-world adjacency data)
-connections = {
-    node: random.sample(nodes, min(2, len(nodes))) for node in nodes
-}
+# Build a spatial tree for fast nearest-neighbor lookup
+school_coords = np.array([(row.geometry.y, row.geometry.x) for _, row in giga_data.iterrows()])
+school_names = giga_data["name"].tolist()
+school_tree = KDTree(school_coords)
 
 # AI-Powered Query Processing
-def process_query(query):
+def process_query(query, location):
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "system", "content": "You are an AI expert in geospatial networks."},
-                      {"role": "user", "content": query}]
+            messages=[
+                {"role": "system", "content": f"You are an AI expert in geospatial networks assisting schools in {location}."},
+                {"role": "user", "content": query}
+            ]
         )
         return response["choices"][0]["message"]["content"]
     except Exception as e:
         return f"AI Processing Failed: {e}"
 
-# Geospatial Routing: Find Closest Node
-def find_best_node(query):
-    keywords = {  
-        "network": nodes[0],  
-        "security": nodes[1],  
-        "speed": nodes[2],  
-        "connectivity": nodes[3],  
-        "optimization": nodes[4]  
-    }
-    for keyword, node in keywords.items():
-        if keyword in query.lower():
-            return node
-    return random.choice(nodes)
+# Find the Closest School Based on Query Location
+def find_best_node(lat, lon):
+    _, idx = school_tree.query([lat, lon])
+    return school_names[idx]
 
 # Draw Geospatial Network
 def draw_network():
-    m = folium.Map(location=[20, 0], zoom_start=2)
+    m = folium.Map(location=[0, 0], zoom_start=2)  # World map
 
     for node, loc in node_locations.items():
-        folium.Marker(loc, tooltip=node, icon=folium.Icon(color='blue')).add_to(m)
-    
-    for node, edges in connections.items():
-        for edge in edges:
-            folium.PolyLine([node_locations[node], node_locations[edge]], color='gray').add_to(m)
-    
+        folium.Marker(
+            location=loc,
+            tooltip=node,
+            icon=folium.Icon(color="blue")
+        ).add_to(m)
+
     folium_static(m)
 
 # Streamlit UI
-st.title("AI-Powered Geospatial Mesh Network")
-st.write("This project simulates AI-powered query routing in a geospatial network using Giga data.")
+st.title("AI-Powered Geospatial Mesh Network 🌍")
+st.write("This project simulates **AI-powered query routing** in a **real-world geospatial network** using Giga data.")
 
 query = st.text_area("Enter your question:")
+lat = st.number_input("Enter your latitude:", value=30.3753)  # Default: Pakistan
+lon = st.number_input("Enter your longitude:", value=69.3451)
+
 if st.button("Submit Query"):
     if query:
         st.write("### Step 1: AI Processing")
-        processed_query = process_query(query)
+        best_node = find_best_node(lat, lon)
+        processed_query = process_query(query, best_node)
         st.success(processed_query)
 
         st.write("### Step 2: Geospatial Routing")
-        best_node = find_best_node(query)
-        st.info(f"Query is routed to: {best_node} (Real-world location: {node_locations[best_node]})")
+        st.info(f"Query is routed to: {best_node} (Location: {node_locations[best_node]})")
 
         st.write("### Step 3: Network Visualization")
         draw_network()
