@@ -70,17 +70,27 @@ def find_best_node(lat, lon):
     return school_names[idx]
 
 # Draw Geospatial Network
-def draw_network():
-    m = folium.Map(location=[0, 0], zoom_start=2)  # Default to world map
+# def draw_network():
+#     if not node_locations:  # Check if there are no locations
+#         st.warning("No locations available to display.")
+#         return
 
-    for node, loc in node_locations.items():
-        folium.Marker(
-            location=[loc[0], loc[1]],  # Correct order: lat, lon
-            tooltip=node,
-            icon=folium.Icon(color="blue")
-        ).add_to(m)
+#     # Calculate the center of the map dynamically
+#     avg_lat = np.mean([loc[0] for loc in node_locations.values()])
+#     avg_lon = np.mean([loc[1] for loc in node_locations.values()])
 
-    folium_static(m)
+#     # Create a Folium map centered at the average coordinates
+#     m = folium.Map(location=[avg_lat, avg_lon], zoom_start=5)  
+
+#     for node, loc in node_locations.items():
+#         folium.Marker(
+#             location=[loc[0], loc[1]],  # Correct order: lat, lon
+#             tooltip=node,
+#             icon=folium.Icon(color="blue")
+#         ).add_to(m)
+
+#     folium_static(m)
+
 
 # Streamlit UI
 st.title("AI-Powered Geospatial Mesh Network 🌍")
@@ -101,10 +111,10 @@ if st.button("Submit Query"):
         st.write("### Step 2: Geospatial Routing")
         st.info(f"Query is routed to: {best_node} (Location: {node_locations[best_node]})")
 
-        st.write("### Step 3: Network Visualization")
-        draw_network()
+        # st.write("### Step 3: Network Visualization")
+        # draw_network()
 
-        st.write("### Step 4: AI Response from Node")
+        st.write("### Step 3: AI Response from Node")
         st.success(f"Response from {best_node}: {processed_query}")
     else:
         st.warning("Please enter a query.")
