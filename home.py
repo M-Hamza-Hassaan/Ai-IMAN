@@ -8,9 +8,10 @@ from streamlit_folium import folium_static
 from shapely.geometry import Point
 from scipy.spatial import KDTree
 import numpy as np
+from dotenv import load_dotenv
 import os
 
-
+load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
