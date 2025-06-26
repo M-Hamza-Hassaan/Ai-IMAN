@@ -1,5 +1,7 @@
 # Intelligent Mesh Ai Network 🌍
 
+![image](https://github.com/user-attachments/assets/1609f60c-0db3-48be-af2c-560e17c5642c)
+
 ## Problem Statement
 Students, especially in remote areas, struggle to access relevant educational resources due to poor infrastructure and limited connectivity. Many educational institutions lack efficient ways to route queries and provide real-time information based on geospatial data.
 
