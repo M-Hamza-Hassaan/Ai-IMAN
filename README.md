@@ -1,10 +1,17 @@
-# AI-Powered Geospatial Mesh Network 🌍
+# Intelligent Mesh Ai Network 🌍
+
+![image](https://github.com/user-attachments/assets/1609f60c-0db3-48be-af2c-560e17c5642c)
 
 ## Problem Statement
 Students, especially in remote areas, struggle to access relevant educational resources due to poor infrastructure and limited connectivity. Many educational institutions lack efficient ways to route queries and provide real-time information based on geospatial data.
 
 ## Our Solution
-We developed an **AI-powered geospatial mesh network** that enables students and educators to interact with an intelligent system capable of routing queries efficiently. By leveraging geospatial datasets and AI, we can process user queries and dynamically route them to the nearest educational institution, providing real-time responses and visualization.
+We developed an **Intelligent mesh ai network** that enables students and educators to interact with an intelligent system capable of routing queries efficiently. By leveraging geospatial datasets and AI, we can process user queries and dynamically route them to the nearest educational institution, providing real-time responses and visualization.
+
+---
+![image](https://github.com/user-attachments/assets/84707bba-b87d-424c-80bc-24562b5b7088)
+
+---
 
 ## Technologies Used
 - **Streamlit**: For the web-based interactive UI
@@ -33,7 +40,7 @@ We developed an **AI-powered geospatial mesh network** that enables students and
 ## Getting Started
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/geospatial-mesh-network.git
+   git clone https://github.com/M-Hamza-Hassaan/Connect-Ai-Innovators.git
    ```
 2. Install dependencies:
    ```sh
