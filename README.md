@@ -18,7 +18,7 @@ We developed an **Intelligent mesh ai network** that enables students and educat
 - **Folium**: For geospatial visualization
 - **Pandas & GeoPandas**: For data processing and manipulation
 - **SciPy KDTree**: For efficient nearest-school lookup
-- **Bagoodex AI API**: For AI-powered query processing
+- **OPENROUTER AI API**: For AI-powered query processing
 - **Shapely**: For geospatial computations
 - **NumPy**: For numerical computations
 
