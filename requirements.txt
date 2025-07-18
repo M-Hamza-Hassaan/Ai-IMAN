@@ -1,13 +1,8 @@
 streamlit
-requests
-geopy
 folium
-openai
-pandas
-numpy
 geopandas
-streamlit_folium
-shapely
+geopy
 scipy
-numpy
+pandas
 python-dotenv
+streamlit-folium
