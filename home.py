@@ -11,12 +11,17 @@ from streamlit_folium import st_folium
 from dotenv import load_dotenv
 import streamlit as st
 
-# Load API Key
+# ---------------------- APP CONFIGURATION ----------------------
+st.set_page_config(page_title="📡 AI-IMAN", layout="wide")
+st.title("📡 AI-IMAN: AI-Powered Education Mesh for Children")
+st.markdown("Designed to guide underserved children by connecting them to nearby learning hubs and providing AI-powered educational help.")
+
+# ---------------------- LOAD CONFIG & API ----------------------
 load_dotenv()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 SCHOOL_DATA_FILE = "school_geolocation.csv"
 
-# ---------------------- CACHE SCHOOL DATA ----------------------
+# ---------------------- (PIPELINE 2) LOCATION-BASED PROCESSING ----------------------
 @st.cache_data
 def load_geospatial_data():
     df = pd.read_csv(SCHOOL_DATA_FILE)
@@ -27,7 +32,6 @@ def load_geospatial_data():
     )
     return gdf
 
-# ---------------------- CORE LOCATION LOGIC ----------------------
 giga_data = load_geospatial_data()
 node_locations = dict(zip(giga_data["school_name"], zip(giga_data["latitude"], giga_data["longitude"])))
 school_coords = np.array(list(node_locations.values()))
@@ -40,7 +44,7 @@ def find_closest_node(lat, lon):
     distance_km = round(geodesic((lat, lon), closest_coords).km, 2)
     return school_names[idx], distance_km
 
-# ---------------------- AI QUERY PROCESSING ----------------------
+# ---------------------- (PIPELINE 3) AI QUERY PROCESSING ----------------------
 @st.cache_data
 def get_ai_response(query):
     if not query:
@@ -62,7 +66,7 @@ def get_ai_response(query):
     except Exception as e:
         return f"AI failed: {e}"
 
-# ---------------------- MAP DRAWING ----------------------
+# ---------------------- (PIPELINE 5) NETWORK VISUALIZATION ----------------------
 def draw_map(user_lat, user_lon, best_node_name, radius_km):
     m = folium.Map(location=[user_lat, user_lon], zoom_start=7)
 
@@ -97,11 +101,6 @@ def draw_map(user_lat, user_lon, best_node_name, radius_km):
 
     _ = st_folium(m, height=500, width=900)
 
-# ---------------------- APP SETUP ----------------------
-st.set_page_config(page_title="📡 Education Mesh for Children", layout="wide")
-st.title("📡 AI-Powered Learning Assistant for Underserved Communities")
-st.markdown("Designed to guide underserved children by connecting them to nearby learning hubs and providing AI-powered educational help.")
-
 # ---------------------- SESSION STATE INIT ----------------------
 if "submitted" not in st.session_state:
     st.session_state.submitted = False
@@ -112,7 +111,7 @@ if "best_node" not in st.session_state:
 if "distance" not in st.session_state:
     st.session_state.distance = 0.0
 
-# ---------------------- USER INPUT ----------------------
+# ---------------------- (PIPELINE 1) USER QUERY INPUT ----------------------
 st.subheader("✍️ Ask Your Question")
 query = st.text_area("What do you want to learn about?", placeholder="E.g. What is photosynthesis?")
 
@@ -126,24 +125,31 @@ suggestions = st.expander("🧠 Try Suggested Topics")
 with suggestions:
     st.markdown("- What is the water cycle?\n- How do plants grow?\n- What is 2 + 2?\n- Why is the sky blue?\n- What are continents?")
 
-# ---------------------- FORM SUBMISSION ----------------------
+# ---------------------- (PIPELINE 4) ROUTING & (PIPELINE 6) RESPONSE GENERATION ----------------------
 if st.button("🚀 Submit"):
     st.session_state.submitted = True
+
+    # Step 4: Find closest institution
     st.session_state.best_node, st.session_state.distance = find_closest_node(lat, lon)
+
+    # Step 6: Generate AI response
     if query.strip():
-        enhanced_prompt = f"A child asked: {query.strip()}. Explain it in a simple way suitable for grade 5."
-        st.session_state.response = get_ai_response(enhanced_prompt)
+        prompt = f"A child asked: {query.strip()}. Explain it in a simple way suitable for grade 5."
+        st.session_state.response = get_ai_response(prompt)
 
 # ---------------------- RESET ----------------------
 if st.button("🔄 Reset"):
     for key in st.session_state.keys():
-        st.session_state[key] = False if isinstance(st.session_state[key], bool) else ""
+        if isinstance(st.session_state[key], bool):
+            st.session_state[key] = False
+        else:
+            st.session_state[key] = ""
 
-# ---------------------- RESULTS ----------------------
+# ---------------------- DISPLAY RESULTS ----------------------
 if st.session_state.submitted:
     st.success(f"✅ Closest Hub: **{st.session_state.best_node}** ({st.session_state.distance} km away)")
+
     st.write("### 🗺️ Learning Network Map")
-    
     with st.spinner("Loading map..."):
         draw_map(lat, lon, st.session_state.best_node, radius_km)
 
